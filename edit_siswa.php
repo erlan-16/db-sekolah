@@ -6,8 +6,15 @@ include 'koneksi.php';
 $result_kelas = mysqli_query($koneksi, "SELECT id_kelas, nama_kelas FROM kelas");
 $result_wali = mysqli_query($koneksi, "SELECT id_wali, nama_wali FROM wali_murid");
 
-// Tambah Data Siswa
-if (isset($_POST['tambah_siswa'])) {
+// Ambil data siswa berdasarkan id
+if (isset($_GET['nis'])) {
+    $nis = $_GET['nis'];
+    $result_siswa = mysqli_query($koneksi, "SELECT * FROM siswa WHERE nis='$nis'");
+    $siswa = mysqli_fetch_assoc($result_siswa);
+}
+
+// Update Data Siswa
+if (isset($_POST['edit_siswa'])) {
     $nis = $_POST['nis'];
     $nama_siswa = $_POST['nama_siswa'];
     $jenis_kelamin = $_POST['jenis_kelamin'];
@@ -16,8 +23,7 @@ if (isset($_POST['tambah_siswa'])) {
     $id_kelas = $_POST['id_kelas'];
     $id_wali = $_POST['id_wali'];
 
-    $query = "INSERT INTO siswa (nis, nama_siswa, jenis_kelamin, tempat_lahir, tanggal_lahir, id_kelas, id_wali) 
-              VALUES ('$nis', '$nama_siswa', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$id_kelas', '$id_wali')";
+    $query = "UPDATE siswa SET nama_siswa='$nama_siswa', jenis_kelamin='$jenis_kelamin', tempat_lahir='$tempat_lahir', tanggal_lahir='$tanggal_lahir', id_kelas='$id_kelas', id_wali='$id_wali' WHERE nis='$nis'";
     mysqli_query($koneksi, $query);
     header("Location: index.php");
 }
@@ -26,7 +32,7 @@ if (isset($_POST['tambah_siswa'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Tambah Siswa</title>
+    <title>Edit Siswa</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -59,20 +65,20 @@ if (isset($_POST['tambah_siswa'])) {
             border-radius: 4px;
         }
         button {
-            background: #28a745;
+            background: #007bff;
             color: white;
             font-size: 16px;
             cursor: pointer;
             margin-top: 15px;
         }
         button:hover {
-            background: #218838;
+            background: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Form Tambah Siswa</h2>
+        <h2>Form Edit Siswa</h2>
         <form method="POST" action="">
             <label>NIS:</label>
             <input type="text" name="nis" required>
@@ -106,7 +112,7 @@ if (isset($_POST['tambah_siswa'])) {
                 <?php } ?>
             </select>
             
-            <button type="submit" name="tambah_siswa">Tambah Siswa</button>
+            <button type="submit" name="edit_siswa">Update Siswa</button>
         </form>
     </div>
 </body>
